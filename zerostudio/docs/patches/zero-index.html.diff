@@ -1,0 +1,10 @@
+--- /home/claude/src/zero/playground-zero/index.html	2026-10-28 22:26:03.000000000 +0000
++++ zerostudio-v1/engines/zero/index.html	2026-10-30 05:11:04.027041442 +0000
+@@ -79,5 +79,7 @@
+   <script src="js/pages/discover.js?v=4.0.0"></script>
+   <script src="js/pages/myspace.js?v=4.0.0"></script>
+   <script src="js/main.js?v=4.0.0"></script>
++  <!-- ZeroStudio 連携（?zs=1 で開かれたときだけ有効。単体では何も読み込まない） -->
++  <script src="zs-bridge.js"></script>
+ </body>
+ </html>

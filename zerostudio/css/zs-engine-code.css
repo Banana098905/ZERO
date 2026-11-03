@@ -1,0 +1,40 @@
+/* Code Studio を ZeroStudio の中で表示するときのテーマ（共通トークンへの置き換えと、重複する枠の整理）
+ * 元の styles.css は変更せず、後から読み込んで上書きする。レイアウト（3ペイン）は維持する。 */
+:root {
+  --bg: var(--zs-bg); --surface: var(--zs-surface); --surface-2: var(--zs-raised); --line: var(--zs-line);
+  --text: var(--zs-text); --muted: var(--zs-muted);
+  --cyan: var(--zs-blue); --purple: var(--zs-mint); --blue: var(--zs-blue); --pink: var(--zs-zero);
+  --mono: var(--zs-mono);
+}
+body { font-family: var(--zs-font); font-size: 14px; background: var(--zs-bg); }
+.app-shell { background: var(--zs-bg); }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline-color: var(--zs-focus); }
+/* 上部: ブランドは ZeroStudio のバーにあるので省き、タブと操作を1行に */
+.topbar { height: 46px; gap: 16px; padding: 0 14px; background: var(--zs-bg-2); backdrop-filter: none; position: static; }
+.brand, .dirty-state { display: none !important; }
+.nav-link { font-size: 12px; letter-spacing: .02em; color: var(--zs-muted); }
+.nav-link.active, .nav-link:hover { color: var(--zs-text); }
+.nav-link.active:after { background: var(--zs-blue); }
+.button { border-radius: var(--zs-r-sm); padding: 6px 12px; transition: background var(--zs-fast), border-color var(--zs-fast), transform var(--zs-fast); }
+.button:hover { transform: none; }
+.button.primary { background: var(--zs-mint); color: var(--zs-ink); box-shadow: none; }
+.button.primary:hover { background: var(--zs-mint-strong); }
+.button.subtle { background: var(--zs-raised); border: 1px solid var(--zs-line-2); }
+.project-bar { padding: 8px 14px; min-height: 0; }
+.eyebrow { display: none !important; }
+.project-bar input { font-size: 15px; }
+.panel, .side-panel, .pop-menu { background: var(--zs-surface); border-color: var(--zs-line); }
+.pop-menu { border-radius: var(--zs-r); box-shadow: var(--zs-sh-3); }
+.pixel-promo, [class*="promo"] { background: var(--zs-bg-2) !important; }
+.project-bar { padding: 4px 14px !important; }
+.project-bar input { margin: 0; }
+/* スマホ幅: 元アプリは「ツール」タブの初期状態でパネルを表示するクラスが付かず中身が空になる。
+ * 3つのパネルのうち、表示クラスの付いたものが無いときだけツールを出す（元の切り替え動作は変えない） */
+@media (max-width: 680px) {
+  .workbench:not(:has(> .panel.mobile-active)) > #toolsPanel { display: block; overflow: auto; }
+  .main-nav { overflow: visible; }
+  .nav-link { white-space: nowrap; font-size: 10px; padding: 0 6px; }
+  .topbar { height: 42px; gap: 4px; padding: 0 8px; }
+  .project-bar { height: auto !important; }
+  .workbench { height: calc(100dvh - 190px); }
+}

@@ -1,0 +1,8 @@
+--- /home/claude/src/logic/script.js	2026-10-26 22:21:10.000000000 +0000
++++ zerostudio-v1/engines/logic/script.js	2026-10-29 06:24:02.012917399 +0000
+@@ -800,4 +800,4 @@
+ function tab(on){if(!on){pause();window.draw&&draw();return}
+  if(!inited){inited=1;plist();try{const a=localStorage.getItem(AUTO);if(a)load(mclean(JSON.parse(a)),1);else load(Q.SMP[0].m(),1)}catch(x){log('Machine Labの自動保存を読み込めませんでした: '+x.message,'e');load(Q.SMP[0].m(),1)}}
+  $('#mlname').value=M.name;props();requestAnimationFrame(()=>{mfit();paint()})}
+-vw();return{tab,save,test:Q.test}})();
++vw();return{tab,save,test:Q.test,zs:{exp,mclean,load,pause}}})();/*ZS-HOOK*/

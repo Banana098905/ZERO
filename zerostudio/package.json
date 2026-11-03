@@ -1,0 +1,13 @@
+{
+  "name": "zerostudio",
+  "version": "1.0.0",
+  "description": "ZeroStudio V1 — CODE LAB / LOGIC PLAYGROUND / PLAYGROUND ZERO を1つの制作エンジンに統合",
+  "private": true,
+  "scripts": {
+    "start": "node scripts/serve.js",
+    "test": "node scripts/test-all.js",
+    "test:unit": "node scripts/test-all.js --unit"
+  },
+  "engines": { "node": ">=18" },
+  "devDependencies": { "playwright": "^1.50.0" }
+}

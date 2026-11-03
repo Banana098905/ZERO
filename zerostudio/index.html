@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d1528">
+<meta name="referrer" content="no-referrer">
+<!-- シェルはインラインスクリプトを持たない。エンジン（iframe）は同一オリジンの子として読み込む -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; frame-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>ZeroStudio</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2362e6c4'/%3E%3Cpath d='M10 10h12l-12 12h12' fill='none' stroke='%2305231d' stroke-width='3.2' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/zs-tokens.css">
+<link rel="stylesheet" href="css/zs.css">
+</head>
+<body>
+<div id="zs-root">
+  <header class="zs-top">
+    <a class="zs-brand" href="#/home" aria-label="ZeroStudio ホーム"><span class="mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M10 10h12l-12 12h12"/></svg></span><span>ZeroStudio</span></a>
+    <nav class="zs-nav" id="zs-nav" aria-label="ZeroStudio ナビゲーション"></nav>
+    <button class="zs-btn primary zs-create" id="zs-create" type="button" aria-haspopup="dialog" aria-label="新規作成"></button>
+    <button class="zs-pill" id="zs-storage" type="button" title="保存先の状態"></button>
+    <button class="zs-btn ghost icon zs-menu-btn" id="zs-menu" type="button" aria-label="メニューを開く" aria-expanded="false" aria-controls="zs-nav"></button>
+  </header>
+  <main id="zs-main" tabindex="-1"></main>
+  <nav class="zs-tabbar" id="zs-tabbar" aria-label="クイックナビゲーション"></nav>
+  <div class="zs-scrim" id="zs-scrim"></div>
+  <div id="zs-toasts" role="status" aria-live="polite"></div>
+</div>
+<noscript><p style="padding:24px;color:#e8eefb">ZeroStudio の利用には JavaScript が必要です。</p></noscript>
+<script src="js/zs-util.js"></script>
+<script src="js/zs-schema.js"></script>
+<script src="js/zs-store.js"></script>
+<script src="js/zs-engines.js"></script>
+<script src="js/zs-service.js"></script>
+<script src="js/zs-host.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/pages.js"></script>
+<script src="js/zs-config.js"></script>
+<script src="js/zs-zero.js"></script>
+<script src="js/shell.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+/* ZeroStudio Design System — 共通トークン
+ * シェル（css/zs.css）と3つのエンジン（css/zs-engine-*.css）が同じ値を参照する。
+ * 色・余白・角丸・影・動きはここだけで定義し、他では直接の色コードを増やさない。 */
+:root {
+  color-scheme: dark;
+
+  /* 面（ネイビー）: 背景 → 面 → 浮き上がり → オーバーレイの4段階 */
+  --zs-bg: #0a1020;
+  --zs-bg-2: #0d1528;
+  --zs-surface: #111a2f;
+  --zs-raised: #17233d;
+  --zs-overlay: #1d2b4a;
+  --zs-line: #22314f;
+  --zs-line-2: #31436a;
+
+  /* 文字（背景 #111a2f 上でのコントラスト: text 14:1 / muted 7:1 / faint 4.6:1） */
+  --zs-text: #e8eefb;
+  --zs-muted: #9fadc9;
+  --zs-faint: #7b8aa9;
+
+  /* アクセント: 淡いブルー（選択・リンク・フォーカス）とミント（主操作・成功） */
+  --zs-blue: #8ab8ff;
+  --zs-blue-soft: rgb(138 184 255 / .14);
+  --zs-mint: #62e6c4;
+  --zs-mint-strong: #4fd6b3;
+  --zs-mint-soft: rgb(98 230 196 / .14);
+  --zs-ink: #05231d;              /* ミント面の上に置く文字 */
+
+  /* エンジンの識別色（ナビの点・チップ・カードの縁だけに使う） */
+  --zs-code: #7db7ff;
+  --zs-logic: #5fe3c0;
+  --zs-zero: #b4a8ff;
+
+  /* 状態 */
+  --zs-ok: #62e6c4;
+  --zs-warn: #f2c879;
+  --zs-danger: #ff8f8f;
+  --zs-danger-soft: rgb(255 143 143 / .12);
+  --zs-warn-soft: rgb(242 200 121 / .12);
+  --zs-focus: #8ab8ff;
+
+  /* 角丸（要素の大きさに応じて4段階） */
+  --zs-r-xs: 6px;
+  --zs-r-sm: 8px;
+  --zs-r: 12px;
+  --zs-r-lg: 18px;
+  --zs-r-pill: 999px;
+
+  /* 影（紺に寄せた3段階。灰色の影は使わない） */
+  --zs-sh-1: 0 1px 2px rgb(3 8 22 / .45);
+  --zs-sh-2: 0 10px 28px rgb(3 8 22 / .45);
+  --zs-sh-3: 0 28px 72px rgb(3 8 22 / .62);
+
+  /* 余白（4px 基準） */
+  --zs-s1: 4px; --zs-s2: 8px; --zs-s3: 12px; --zs-s4: 16px; --zs-s5: 24px; --zs-s6: 32px; --zs-s7: 48px;
+
+  /* 動き */
+  --zs-ease: cubic-bezier(.2, .7, .2, 1);
+  --zs-fast: 140ms;
+  --zs-med: 240ms;
+  --zs-slow: 460ms;
+
+  /* 文字（Webフォントは CSP で読み込めないため、端末の日本語フォントを使う） */
+  --zs-font: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "BIZ UDPGothic", "Meiryo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --zs-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --zs-fast: 1ms; --zs-med: 1ms; --zs-slow: 1ms; }
+}

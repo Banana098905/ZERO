@@ -1,0 +1,9 @@
+--- /home/claude/src/logic/index.html	2026-10-26 22:21:10.000000000 +0000
++++ zerostudio-v1/engines/logic/index.html	2026-10-29 11:08:21.592228522 +0000
+@@ -76,4 +76,5 @@
+ <div id="mlstat" aria-live="off"></div></section>
+ <footer><div id="info"></div><div id="tut"></div><div id="log" aria-live="polite"></div></footer>
+ <div id="toast" role="status"></div>
+-<script src="script.js"></script></body></html>
++<script src="script.js"></script>
++<script src="zs-bridge.js"></script></body></html>

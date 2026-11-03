@@ -1,0 +1,17 @@
+/* Logic Studio を ZeroStudio の中で表示するときのテーマ。元の style.css は変更しない。 */
+:root {
+  --bg: var(--zs-bg); --pn: var(--zs-surface); --ln: var(--zs-line); --tx: var(--zs-text); --mu: var(--zs-muted);
+  --cy: var(--zs-mint); --pu: var(--zs-blue); --bl: var(--zs-blue);
+}
+body { font-family: var(--zs-font); background: var(--zs-bg); }
+header { background: var(--zs-bg-2); border-bottom-color: var(--zs-line); padding: 6px 12px; gap: 6px; }
+.logo, #l1 { display: none !important; }
+button, select, input { background: var(--zs-raised); border: 1px solid var(--zs-line-2); border-radius: var(--zs-r-sm); padding: 4px 10px; min-height: 30px; transition: background var(--zs-fast), border-color var(--zs-fast); }
+button:hover { background: var(--zs-overlay); border-color: #41568a; }
+button.pri { background: var(--zs-mint); color: var(--zs-ink); border: 1px solid var(--zs-mint); font-weight: 700; }
+button.pri:hover { background: var(--zs-mint-strong); }
+button:focus-visible, input:focus-visible, select:focus-visible, #svg:focus-visible { outline: 2px solid var(--zs-focus); outline-offset: 1px; }
+.tab.on, .tab[aria-selected=true] { border-color: var(--zs-blue); color: var(--zs-text); background: var(--zs-blue-soft); }
+aside, #lib, #props { background: var(--zs-surface); }
+#lib h4 { color: var(--zs-blue); }
+input, select, textarea { color: var(--zs-text); }

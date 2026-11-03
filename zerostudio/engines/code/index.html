@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="CODE LAB — コードとキャラクターをつくるWeb制作実験室" />
+  <title>CODE LAB — Create in code</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#workspace" aria-label="CODE LAB ホーム"><span class="brand-mark">⌘</span><span>CODE <b>LAB</b></span></a>
+      <nav class="main-nav" aria-label="メインメニュー">
+        <button class="nav-link active" data-view="workspace">WORKSPACE</button>
+        <button class="nav-link" data-view="pixel">PIXEL LAB</button>
+        <button class="nav-link" data-view="templates">TEMPLATES</button>
+        <button class="nav-link" data-view="projects">MY PROJECTS</button>
+      </nav>
+      <div class="header-actions">
+        <span id="dirtyState" class="dirty-state">保存済み</span>
+        <button id="saveBtn" class="button subtle" title="現在のプロジェクトを保存 (⌘/Ctrl + S)">保存</button>
+        <button id="exportBtn" class="button primary" title="エクスポートメニューを開く">エクスポート <span>⌄</span></button>
+        <div id="exportMenu" class="pop-menu hidden" role="menu">
+          <button data-export="html">単一HTMLをダウンロード</button>
+          <button data-export="json">プロジェクトJSONを書き出す</button>
+          <button data-export="import">JSONを読み込む</button>
+        </div>
+        <input id="importInput" type="file" accept="application/json,.json" hidden />
+      </div>
+    </header>
+
+    <main>
+      <section id="workspace" class="view active">
+        <div class="project-bar">
+          <div><span class="eyebrow">CURRENT PROJECT</span><input id="projectName" value="はじめてのCODE LAB" aria-label="プロジェクト名" /></div>
+          <div class="project-controls">
+            <button id="newProjectBtn" class="icon-text" title="空のプロジェクトを作成">＋ 新規</button>
+            <button id="resetBtn" class="icon-text" title="初期サンプルへ戻す">↺ サンプルに戻す</button>
+          </div>
+        </div>
+        <div class="mobile-panel-tabs" role="tablist">
+          <button class="active" data-mobile-panel="tools">ツール</button><button data-mobile-panel="editor">エディタ</button><button data-mobile-panel="preview">プレビュー</button>
+        </div>
+        <div id="workbench" class="workbench">
+          <aside id="toolsPanel" class="side-panel panel">
+            <div class="panel-heading"><span>QUICK TOOLS</span><button class="collapse-btn" title="パネルを閉じる">‹</button></div>
+            <div class="tool-section">
+              <p class="section-label">PREVIEW</p>
+              <div class="segmented" aria-label="プレビュー幅">
+                <button class="device active" data-device="desktop" title="デスクトップ表示">▣</button><button class="device" data-device="tablet" title="タブレット表示">▯</button><button class="device" data-device="mobile" title="スマートフォン表示">▯</button>
+              </div>
+              <button id="expandPreviewBtn" class="wide-tool">↗ プレビューを広げる</button>
+            </div>
+            <div class="tool-section">
+              <p class="section-label">CODE ACTIONS</p>
+              <button id="runBtn" class="wide-tool run">▶ 実行する <kbd>⌘↵</kbd></button>
+              <button id="formatBtn" class="wide-tool">✦ コードを整形</button>
+              <button id="copyBtn" class="wide-tool">□ 現在のコードをコピー</button>
+            </div>
+            <div class="tool-section info-card">
+              <span class="spark">▦</span>
+              <div><strong>PIXEL LAB</strong><p>描いたドット絵を、実行できるコードへ。</p><button data-view="pixel">工房を開く →</button></div>
+            </div>
+            <div class="tool-section console-section">
+              <div class="section-label line"><span>CONSOLE</span><button id="clearConsole" title="コンソールを消去">消去</button></div>
+              <div id="consoleOutput" class="console-output" aria-live="polite"><span class="muted">実行ログがここに表示されます。</span></div>
+            </div>
+          </aside>
+          <div id="editorPanel" class="editor-panel panel">
+            <div class="editor-topbar"><div id="editorTabs" class="editor-tabs" role="tablist"><button class="code-tab active" data-lang="html">index.html</button><button class="code-tab" data-lang="css">style.css</button><button class="code-tab" data-lang="js">script.js</button></div><span id="languageLabel">HTML</span></div>
+            <div class="code-editor" id="codeEditor">
+              <div id="lineNumbers" class="line-numbers" aria-hidden="true">1</div>
+              <pre id="highlightLayer" aria-hidden="true"><code></code></pre>
+              <textarea id="codeInput" spellcheck="false" aria-label="コードエディタ"></textarea>
+            </div>
+            <div class="editor-footer"><span id="cursorStatus">Ln 1, Col 1</span><span>UTF-8</span><span>Spaces: 2</span></div>
+          </div>
+          <div id="dragHandle" class="drag-handle" title="ドラッグしてエディタ幅を調整"></div>
+          <section id="previewPanel" class="preview-panel panel">
+            <div class="preview-toolbar"><div><span class="live-dot"></span> LIVE PREVIEW</div><div><button id="refreshBtn" title="プレビューを再読み込み">↻</button><button id="openPreviewBtn" title="別タブで開く">↗</button></div></div>
+            <div class="preview-stage"><iframe id="previewFrame" title="ライブプレビュー" sandbox="allow-scripts allow-modals"></iframe></div>
+          </section>
+        </div>
+      </section>
+
+      <section id="pixel" class="view">
+        <div class="page-title"><div><span class="eyebrow">DRAW · CONVERT · PLAY</span><h1>PIXEL <em>LAB</em></h1><p>描いた1ピクセルを、サイトやゲームで使えるコードに変換。</p></div><div class="pixel-title-actions"><button id="pixelNewBtn" class="button subtle">＋ 新しい作品</button><button id="pixelSaveBtn" class="button primary">作品を保存</button></div></div>
+        <div class="pixel-layout">
+          <aside class="pixel-tools panel">
+            <div class="panel-heading">DRAWING TOOLS <span id="pixelSizeReadout">16 × 16</span></div>
+            <div class="tool-grid" id="pixelTools"><button class="pixel-tool active" data-tool="pen" title="ペン">✎<span>ペン</span></button><button class="pixel-tool" data-tool="eraser" title="消しゴム">⌫<span>消しゴム</span></button><button class="pixel-tool" data-tool="fill" title="塗りつぶし">▰<span>塗る</span></button><button class="pixel-tool" data-tool="eyedropper" title="スポイト">◉<span>スポイト</span></button></div>
+            <div class="tool-section"><p class="section-label">CANVAS</p><label class="compact-label">サイズ<select id="pixelGridSize"><option value="16">16 × 16</option><option value="32">32 × 32</option><option value="64">64 × 64</option></select></label><label class="compact-label">背景<input id="pixelBackground" type="color" value="#171a2b" /></label><label class="check-label"><input id="transparentToggle" type="checkbox" checked /> 透明背景</label><div class="zoom-row"><span>拡大</span><button id="zoomOutBtn" title="縮小">−</button><output id="zoomReadout">100%</output><button id="zoomInBtn" title="拡大">＋</button></div></div>
+            <div class="tool-section action-pair"><button id="undoBtn" title="元に戻す">↶ 元に戻す</button><button id="redoBtn" title="やり直す">↷ やり直し</button><button id="clearPixelBtn" class="danger-text" title="キャンバス全体を消去">⌫ すべて消去</button></div>
+            <div class="tool-section"><p class="section-label">ANIMATION</p><div id="frameList" class="frame-list"></div><div class="frame-actions"><button id="addFrameBtn">＋ フレーム</button><button id="duplicateFrameBtn">複製</button><button id="deleteFrameBtn">削除</button></div><button id="playFramesBtn" class="wide-tool run">▶ 再生</button><label class="compact-label">速度 <input id="fpsRange" type="range" min="1" max="12" value="4" /><output id="fpsOutput">4 FPS</output></label></div>
+          </aside>
+          <section class="pixel-workspace panel"><div class="preview-toolbar"><span><span class="live-dot"></span> PIXEL CANVAS</span><input id="pixelName" value="はじめてのドット絵" aria-label="ピクセル作品名" /><span id="pixelStatus">ペン / #7C6CFF</span></div><div id="pixelCanvasViewport" class="pixel-canvas-viewport"><div id="pixelCanvas" class="pixel-canvas" aria-label="ドット絵キャンバス"></div></div></section>
+          <aside class="pixel-settings panel"><div class="panel-heading">COLOR & EXPORT <span><button id="pixelLibraryBtn">保存作品</button><button id="pixelImportBtn">JSON読込</button></span><input id="pixelImportInput" type="file" accept="application/json,.json" hidden /></div><div id="pixelLibrary" class="pixel-library hidden"></div><div class="color-current"><input id="pixelColor" type="color" value="#7c6cff" /><div><span>SELECTED COLOR</span><strong id="pixelColorHex">#7C6CFF</strong></div><button id="saveColorBtn" title="パレットへ追加">＋</button></div><div id="swatchPalette" class="swatch-palette"></div><div class="tool-section"><p class="section-label">PIXEL TO CODE</p><label class="compact-label">形式<select id="pixelOutputType"><option value="css">HTML + CSS</option><option value="js">Canvas JavaScript</option><option value="json">Pixel Data JSON</option></select></label><pre id="pixelGeneratedCode" class="pixel-code"></pre><div class="export-actions"><button id="copyPixelCodeBtn">コードをコピー</button><button id="sendToEditorBtn" class="button primary">エディタへ送る</button></div><label class="compact-label">送信方法<select id="sendStrategy"><option value="new">新規プロジェクトとして開く</option><option value="append">既存コードに追加</option><option value="replace">現在のコードを置換</option></select></label></div><div class="tool-section"><p class="section-label">FILE EXPORT</p><label class="compact-label">PNG倍率<select id="pngScale"><option value="1">等倍</option><option value="4" selected>4倍</option><option value="8">8倍</option></select></label><button id="downloadPngBtn" class="wide-tool">↓ PNGを書き出す</button><button id="downloadPixelJsonBtn" class="wide-tool">↓ 編集用JSON</button><button id="downloadSpriteBtn" class="wide-tool">↓ スプライトシートPNG</button></div></aside>
+        </div>
+      </section>
+
+      <section id="templates" class="view"><div class="page-title"><div><span class="eyebrow">START FAST</span><h1>TEMPLATE <em>GALLERY</em></h1><p>気になる実験を選んだら、そのまま編集を始めよう。</p></div></div><div id="templateGrid" class="template-grid"></div></section>
+      <section id="projects" class="view"><div class="page-title"><div><span class="eyebrow">LOCAL STORAGE</span><h1>MY <em>PROJECTS</em></h1><p>このブラウザに保存された作品です。</p></div><button id="newProjectBtn2" class="button primary">＋ 新規プロジェクト</button></div><div id="projectGrid" class="project-grid"></div></section>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <dialog id="confirmDialog"><form method="dialog"><h3 id="dialogTitle">確認</h3><p id="dialogText"></p><div><button value="cancel" class="button subtle">キャンセル</button><button id="confirmAction" value="confirm" class="button danger">削除する</button></div></form></dialog>
+  <script src="zs-bridge.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

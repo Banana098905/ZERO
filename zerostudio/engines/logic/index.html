@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LOGIC PLAYGROUND｜ロジック工房</title><link rel="stylesheet" href="style.css"></head><body>
+<header>
+<b class="logo">LOGIC PLAYGROUND</b><span class="tabs"><button class="tab on" data-tab="circuit">Circuit Studio</button><button class="tab" data-tab="cpu">CPU Lab</button><button class="tab" data-tab="sa">Signal Analyzer</button><button class="tab" data-tab="machine">Machine Lab</button></span><input id="pname" aria-label="プロジェクト名" maxlength="40">
+<button id="run" class="pri">▶ 実行</button><button id="stop">■ 停止</button><button id="reset">↺ リセット</button>
+<button id="undo">↶ 元に戻す</button><button id="redo">↷ やり直す</button>
+<button id="save">保存</button><select id="plist" aria-label="保存済みプロジェクト"></select><button id="load">読込</button><button id="del">削除</button><button id="new">新規</button>
+<select id="samples" aria-label="サンプル回路"></select>
+<button id="exp">JSON出力</button><button id="imp">JSON読込</button><button id="share">URL共有</button><button id="fit">全体表示</button><button id="help">チュートリアル</button>
+<a id="l1" target="_blank" rel="noopener">CODE-LAB</a><a id="l2" target="_blank" rel="noopener">ポートフォリオ</a>
+<input type="file" id="file" accept=".json,application/json" hidden>
+</header>
+<main>
+<aside id="lib" aria-label="部品ライブラリ"></aside>
+<section id="cv"><svg id="svg" aria-label="回路キャンバス"><g id="vp"><g id="wl"></g><path id="tmp"/><g id="nl"></g></g></svg>
+<div id="zm"><button id="zi" aria-label="拡大">＋</button><button id="zo" aria-label="縮小">－</button></div>
+<div id="empty">左のライブラリから部品をクリックして追加します。<br>出力端子（右の●）から入力端子（左の●）へドラッグ、またはクリック→クリックで接続します。</div></section>
+<aside id="props"></aside>
+</main>
+<section id="cpu" hidden aria-label="CPU Lab">
+<div class="cp"><h3>Assembly Lab</h3>
+<div class="row"><select id="asmsel" aria-label="サンプルプログラム"></select><button id="asmload" class="pri">アセンブル＆ロード</button></div>
+<textarea id="asm" spellcheck="false" aria-label="アセンブリコード"></textarea><ul id="asmerr"></ul>
+<details><summary>命令セット (ISA)</summary><div id="isa"></div></details></div>
+<div class="cp"><h3>CPU（8ビット教育用モデル）</h3>
+<div class="row"><button id="cstep">ステップ</button><button id="crun" class="pri">▶ 実行</button><button id="cstop">■ 停止</button><button id="creset">CPUリセット</button></div>
+<div class="row"><label>速度 <select id="cspd"><option value="20">20命令/秒</option><option value="200" selected>200命令/秒</option><option value="2000">2000命令/秒</option><option value="10000">10000命令/秒</option></select></label><label>IN入力値 <input id="cin" type="number" min="0" max="255" value="0"></label></div>
+<div id="regs"></div><div id="cout"></div><div id="cstat" aria-live="polite"></div>
+<div class="row"><button id="ctest">セルフテスト</button></div>
+<p class="mu">これはゲートレベルのCPUではなく、内部状態（レジスタ・PC・フラグ・256バイトメモリ）で命令を実行するCPUモデルです。CPUリセットはレジスタ・PC・フラグ・OUT履歴を初期化し、メモリは保持します。ロードまたはメモリ消去でメモリを書き換えます。</p></div>
+<div class="cp"><h3>Memory Explorer</h3>
+<div class="row"><button id="mfmt">2進表示に切替</button><button id="mclr">メモリ消去</button></div>
+<p class="mu"><span class="lg mc"></span>プログラム <span class="lg md"></span>データ(.db) <span class="lg mp"></span>PC <span class="lg mr"></span>読込 <span class="lg mw"></span>書込　セルをクリックして値を編集</p>
+<div id="mem"></div><h4>書き込み履歴（新しい順）</h4><div id="mhist"></div></div>
+</section>
+<section id="sa" hidden aria-label="Signal Analyzer">
+<div id="sbar" role="toolbar" aria-label="解析コントロール">
+<span class="gp"><button id="srec" class="pri" title="波形の記録を開始/停止 (R)。シミュレーション自体は止まりません">● 記録開始</button><button id="sclr" title="現在の時間軸の記録データを消去">🗑 クリア</button></span>
+<span class="gp"><button id="srun" title="選択中の時間軸のシミュレーションを実行 (Space)">▶ 実行</button><button id="spause" title="一時停止 (Space)">⏸ 一時停止</button><button id="sstep" title="実際に1ステップ進める (S)。回路は下のステップ幅、CPUは1命令">⏭ 1ステップ</button><button id="srst" title="シミュレーションをリセット">↺ リセット</button>
+<label title="回路の1ステップ実行で与えるdt（実行中は実時間の経過を使用）">ステップ幅(s)<input id="sdt" type="number" min="0.001" max="0.25" step="0.001" value="0.05" style="width:70px"></label>
+<label title="オンにするとリセット時に記録も消去。オフなら時間を継続して保持"><input type="checkbox" id="sclrrst">リセット時に記録を消す</label></span>
+<span class="gp"><label>時間軸<select id="sdom"><option value="circ">回路（仮想時間・秒）</option><option value="cpu">CPU（命令ステップ）</option></select></label>
+<label>多ビット表示<select id="sfmt"><option value="hex">16進</option><option value="bin">2進</option><option value="dec">10進</option><option value="num">数値トラック</option></select></label>
+<label>高さ<input id="sth" type="range" min="24" max="140" value="44"></label></span>
+<span class="gp"><button id="szi" title="拡大 (+ / Ctrl+ホイール)">＋</button><button id="szo" title="縮小 (-)">－</button><button id="sfit" title="全体表示 (0)">全体</button><button id="slat" title="最新位置へ (End)">最新</button><label><input type="checkbox" id="sfol" checked>追従</label></span>
+<span class="gp"><select id="scsv" aria-label="CSV形式"><option value="ev">CSV: イベント形式</option><option value="tl">CSV: 時間ごとの値</option><option value="lg">CSV: イベントログ</option></select><button id="sexp">CSV出力</button><button id="stest" title="実エンジンを使った自己検証">セルフテスト</button><button id="shelp">操作ガイド</button><button id="stl">信号▤</button><button id="str">詳細▥</button><button id="stg">ログ▤</button></span>
+</div>
+<div id="sbody">
+<aside id="sl"><h3>解析対象</h3><div id="swl"></div>
+<div class="row"><button id="sall">全て表示</button><button id="sonly" title="選択した1信号だけ表示/解除">選択のみ</button><button id="ssel" title="Circuit Studioで選択中の部品の端子を追加">選択部品を追加</button><button id="sadd64">全出力を追加</button></div>
+<h3>信号を追加</h3><input id="sq" placeholder="検索（例: AND, #3, Q, CPU）" aria-label="信号検索"><div id="savail"></div>
+<h4>CPUメモリ番地</h4><div class="row"><input id="smem" placeholder="0〜255 / 0x..." style="width:110px"><button id="smadd">追加</button></div>
+<p class="mu">回路信号は1ビット(0/1)または数値のみ対応。X(不定)・Z(高インピーダンス)はエンジンが扱わないため表示しません。CPU状態は命令ステップ単位で、回路の仮想時間とは別の時間軸です。</p></aside>
+<div id="sc"><div id="ruler"><canvas id="rc"></canvas></div><div id="wv"><canvas id="wc"></canvas></div>
+<div id="wnav"><input type="range" id="wsl" min="0" max="1000" value="0" aria-label="横スクロール"><span id="wrng"></span></div>
+<div id="slog"><div class="row"><b>イベントログ</b><input id="lq" placeholder="検索" aria-label="ログ検索"><select id="lk" aria-label="種類"><option value="">全種類</option><option value="sig">信号変化</option><option value="clk">クロック/状態更新</option><option value="cpu">CPU命令/分岐</option><option value="reg">レジスタ</option><option value="mem">メモリ</option><option value="io">IN/OUT</option><option value="sim">開始・停止</option><option value="warn">警告</option><option value="err">エラー</option></select><select id="ld" aria-label="対象"><option value="">回路+CPU</option><option value="circ">回路</option><option value="cpu">CPU</option></select><span id="lcnt" class="mu"></span></div><div id="llist"></div></div></div>
+<aside id="sr"><h3>カーソル</h3>
+<div class="row"><button id="cA" class="on" title="A (キー: a)">A</button><input id="ta" type="number" step="any" aria-label="A時刻"><button id="ga">ジャンプ</button></div>
+<div class="row"><button id="cB" title="B (キー: b / Shift+クリック)">B</button><input id="tb" type="number" step="any" aria-label="B時刻"><button id="gb">ジャンプ</button></div>
+<div id="sdelta" class="mu"></div><div class="row"><button id="spin">A位置の値を固定</button><button id="spclr">固定を消去</button></div>
+<div id="svals"></div><div id="spins"></div><h3>A–B間の変化</h3><div id="sbtw"></div><h3>診断（参考情報）</h3><div id="sdiag"></div><h3>選択信号</h3><div id="ssig"></div></aside>
+</div>
+<div id="sstat" aria-live="off"></div>
+<div id="shbox" hidden><button id="shx">閉じる</button><h3>操作ガイド</h3><ul>
+<li><b>記録</b>: ●記録開始で、解析対象の信号の「値が変化した時点」だけを記録。記録停止はシミュレーションを止めません。</li>
+<li><b>カーソル</b>: 波形クリック/ドラッグでA、Shift+クリックでB。時刻の数値入力も可。Shift+←/→で次/前のイベントへ。</li>
+<li><b>表示</b>: Ctrl+ホイール=拡大縮小、Shift+ホイールまたは←/→=横移動、スライダーでも移動。</li>
+<li><b>キー</b>: Space=実行/一時停止、S=1ステップ、R=記録、0=全体、End=最新、a/b=カーソル切替、?=このガイド。</li>
+<li><b>時間</b>: 回路=仮想時間(秒、step(dt)の累積)、CPU=命令ステップ。両者は別軸で、混在表示しません。灰色の領域は未記録です。</li>
+<li><b>保存</b>: 解析対象の設定のみ自動保存。波形データはリロードで消えます（CSVで保存してください）。</li></ul></div>
+</section>
+<section id="ml" hidden aria-label="Machine Lab">
+<div id="mlbar" role="toolbar" aria-label="Machine Labコントロール"><input id="mlname" aria-label="機械名" maxlength="40"><button id="mlrun" class="pri">▶ 実行</button><button id="mlpause">⏸ 一時停止</button><button id="mlstep">⏭ 1ステップ</button><button id="mlreset">↺ リセット</button><label>速度<select id="mlspd"><option value=".5">0.5×</option><option value="1" selected>1×</option><option value="2">2×</option><option value="4">4×</option></select></label><select id="mlsamples" aria-label="サンプル機械"></select><button id="mlsave">保存</button><select id="mlplist" aria-label="保存済み機械"></select><button id="mlload">読込</button><button id="mlpdel">削除</button><button id="mlnew">新規</button><button id="mlexp">JSON出力</button><button id="mlimp">JSON読込</button><button id="mlclr">配置リセット</button><button id="mlbrall">箱を空にする</button><button id="mlfit">全体表示</button><input type="file" id="mlfile" accept=".json,application/json" hidden></div>
+<div id="mlbody"><aside id="mllib" aria-label="機械部品ライブラリ"></aside><div id="mlcv"><svg id="mlsvg" tabindex="0" aria-label="機械キャンバス"><g id="mlvp"><g id="mlg"></g></g></svg><div id="mlzm"><button id="mlzi" aria-label="拡大">＋</button><button id="mlzo" aria-label="縮小">－</button></div><div id="mlhint">部品をクリックで追加／ドラッグで移動／Delete で削除／空き地ドラッグで画面移動・ホイールで拡大／Space で実行・停止</div></div><aside id="mlprops" aria-label="プロパティ"></aside></div>
+<div id="mlstat" aria-live="off"></div></section>
+<footer><div id="info"></div><div id="tut"></div><div id="log" aria-live="polite"></div></footer>
+<div id="toast" role="status"></div>
+<script src="script.js"></script>
+<script src="zs-bridge.js"></script></body></html>

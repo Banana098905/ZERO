@@ -1,0 +1,15 @@
+/* Zero Engine を ZeroStudio の中で表示するときのテーマ。元の style.css は変更しない。
+ * Zero 独自のトークン名（--lime など）を共通パレットに割り当てる。 */
+:root {
+  --bg: var(--zs-bg); --bg-2: var(--zs-bg-2); --panel: var(--zs-surface); --panel-2: var(--zs-raised);
+  --line: var(--zs-line); --line-2: var(--zs-line-2); --text: var(--zs-text); --muted: var(--zs-muted); --dim: var(--zs-faint);
+  --lime: var(--zs-mint); --lime-ink: var(--zs-ink); --lime-soft: var(--zs-mint-soft);
+  --purple: var(--zs-zero); --purple-soft: rgb(180 168 255 / .16);
+  --danger: var(--zs-danger); --warn: var(--zs-warn);
+  --font-ui: var(--zs-font); --font-mono: var(--zs-mono);
+}
+body { background-image: none; background-color: var(--zs-bg); }
+:focus-visible { outline-color: var(--zs-focus); }
+.site-footer { display: none; }
+:root { --header-h: 52px; }
+.site-header { background: rgb(13 21 40 / .96); border-bottom-color: var(--zs-line); }

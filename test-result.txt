@@ -1,0 +1,116 @@
+# node tests.js --e2e  (Zero V1.0.3)
+  ok   WebGL: 本番のシェーダー4本がコンパイル・リンクでき、縁のなめらかさが 1-smoothstep(.8,1,d) の値になる（中心は不透明・d>1 は破棄）
+  ok   導線: ナビに Universe があり、Supabase 未設定でも開ける（#/universe → サンプルへ）。実作品と明確に区別され、WebGL が描画される
+  ok   導線: 通常ナビの Universe はセットアップ画面にならず、セットアップ画面からもサンプルへ行ける
+  ok   Creator Space: 作者未選択なら案内と作者選択UIを表示し、選ぶとその作者の作品だけが表示される。変更・戻るも動く
+  ok   Creator Space: 作品を選んだ状態で入ると、その作者が自動で選ばれる
+  ok   ライフサイクル: Universe を30回開閉しても rAF・window/document リスナー・WebGL コンテキストが増えない（閉じれば0）
+  ok   ライフサイクル: 開閉を連打（待たずに切り替え）しても最終状態が正しく、重複しない
+  ok   ライフサイクル: タブが非表示の間はループが止まり、戻ると再開する
+  ok   ライフサイクル: WebGL コンテキストを失っても復旧する（lose → restore）
+  ok   フォールバック: WebGL が使えない → 2Dギャラリー（90作品・SAMPLE表示・検索可）。ループ・コンテキストは残らない
+  ok   フォールバック: シェーダーのコンパイルが失敗する → 2Dギャラリー（90作品・SAMPLE表示・検索可）。ループ・コンテキストは残らない
+  ok   フォールバック: 描画中に例外が出る → 2Dギャラリー（90作品・SAMPLE表示・検索可）。ループ・コンテキストは残らない
+  ok   モバイル(390×844・タッチ・DPR3): タップで選択、ドラッグで回転、ピンチでズーム、パネルは下部シート
+  ok   モバイル: 狭い画面でも作者選択UIが画面内に収まり、操作できる
+  ok   高DPI: ノードの大きさが DPR に依存しない（旧版は DPR を二重に掛けていた）
+  ok   低性能端末（CPU 4倍遅延・コア2/メモリ2GB）: 軽量モードで動き、操作が通り、自動でさらに軽量化できる
+  ok   実作品(モック): LIVE 表示・サンプルと区別、40作品を表示、サンプルへのリンクがあり、サンプル側から実作品へ戻れる
+  ok   Creator Space(実作品): 作者4人から選ぶと、その作者の10作品だけが表示される
+  ok   Remix(Universe): 許可ライセンスの作品は、最新情報の再取得→ライセンス検証→SHA-256検証→公開画面へ。保持データは元作品のパッケージ
+  ok   Remix(Universe): ShareAlike の元作品は派生作品のライセンスを CC-BY-SA-4.0 に限定する
+  ok   Remix(Universe): all-rights-reserved（他人の作品）はボタン自体が出ず、ネットワークにも触れず、遷移もしない
+  ok   Remix(Universe): 作者本人は自分の all-rights-reserved 作品を Remix できる
+  ok   Remix(Universe): 表示後にライセンスが変更された作品は、実行時の再検証で拒否される（遷移せず、データも取得しない）
+  ok   Remix(Universe): 改ざんされたパッケージ（SHA-256 不一致）は Remix を開始しない
+  ok   Remix(作品ページ): 共通の入口を使い、許可作品は公開画面へ、不可作品はボタンが出ない
+  ok   ルーティング: 読み込み中に離脱しても Universe が後から割り込まない／連続遷移でも1つだけ
+
+INFO 旧式 smoothstep(1.,.8,d) の縁の値(d=.9付近): 0.314 / 新式: 0.314（旧式は GLSL 仕様上 未定義で、実装により結果が変わる）
+INFO 高DPI 明部ピクセル数 dsf1=24006 dsf2(css換算)=23803 比=0.99
+INFO 低性能: level=1 running=true
+E2E OK: 26 tests passed
+  ok   既存: ZeroStudio の buildPublish と Zero の検証式が一致 / 改ざん検出
+  ok   既存: iframe は allow-scripts のみ / HTML注入経路なし / 実行ページ・シェルのCSP / 秘密鍵なし
+  ok   SQL: works に payload_path = author_id/id.json の CHECK 制約とトリガー検証、保存先・作品IDは更新不可
+  ok   SQL: Storage は INSERT/DELETE とも「自分のID/UUID.json」限定、UPDATEポリシーなし、参照中ファイルは削除不可、読み取りは作品の公開状態に準拠
+  ok   SQL: is_own_payload_name の正規表現を JS で再現し、許可・拒否を確認
+  ok   SQL: RLSテストに、他人の保存ファイルを指す INSERT / UPDATE の拒否テストがあり、フィクスチャは正規形式
+  ok   GitHub Actions: 公開ワークフローは両テストを実行し、deploy はテスト成功に依存
+  ok   設定: README に ZS_ZERO_URL / studioOrigins の実際の設定方法がある
+  ok   verify: ZeroStudio の実出力は検証OK、ハッシュは独立計算と一致
+  ok   verify: 改ざん（project / library）を検出
+  ok   verify: 欠落（integrity / hash / library）は拒否
+  ok   verify: アルゴリズムが SHA-256 以外（SHA-1 / sha-256 / 欠落）は拒否
+  ok   verify: ハッシュ形式が不正（大文字・短い・長い・非16進・非文字列）は拒否
+  ok   verify: 別の形式・null・配列・projectなしは拒否
+  ok   validatePkg: エンジン・workType・作品データを検査
+  ok   app.js: 検証OKでない限り投稿ボタンを出さず、投稿直前にも再検証する
+  ok   normalizeOrigins: 空は自オリジン、パス付きはオリジンへ、不正は除外（"*"・http・認証情報・文字列以外）
+  ok   rollback: DB登録失敗 → 作品行が無いことを確認して保存ファイルを削除、元のエラーを返す
+  ok   rollback: 成功時は削除しない
+  ok   rollback: アップロード自体が明確に拒否された場合は削除を試みない
+  ok   rollback: 通信断でアップロードの成否が不明なら、存在確認の上で回収する
+  ok   rollback: 応答が失われただけで作品行が登録済みなら、削除せず成功扱い
+  ok   rollback: 作品行の有無を確認できない場合は絶対に削除せず、記録する
+  ok   rollback: 削除が失敗したら3回再試行し、失敗を記録。後の sweep で回収して記録を消す
+  ok   rollback: sweep 時に作品行が存在すれば（実は登録済み）削除せず記録だけ消す
+  ok   rollback: localStorage が使えなくても当セッション中は記録を保持する
+  ok   結合: Zero 側が未ログインでも受信し、データをメモリに保持して受領確認を返す
+  ok   結合: Zero の起動が極端に遅くても（ready が先に出ない）取りこぼさない
+  ok   結合: Zero が先に起動し ready を連打しても、Studio の書き出しが遅ければ完了後に1件だけ受信
+  ok   結合: ready は許可オリジン宛のみで、"*" には送らない
+  ok   結合: Zero の studioOrigins が Studio のオリジンと違えば受信しない（拒否を通知）
+  ok   Zero 受信口: 別 window・別 origin・別 type・形式不正を厳密に扱う
+  ok   Zero 受信口: opener が無い（直接開いた）場合は何もしない
+  ok   Zero は認証情報を Studio に送らない（ready / 受領確認の内容を検査）
+  ok   app.js: 受信はログイン状態に依存せずメモリ保持、ログイン後・セッション切れ後も保持して投稿確認画面へ戻る
+  ok   SQL: 0001・0002 の SECURITY DEFINER 関数はすべて search_path を空にし、search_path=public は残らない
+  ok   SQL: 関数本体・ポリシー・トリガーでテーブルと関数が public. / storage. / auth. で修飾されている
+  ok   SQL: 0002 は 0001 と同一の関数・ポリシー・トリガーを持つ（定義のずれがない）
+  ok   SQL: 0002 は冪等・1トランザクション・非破壊（関数は create or replace、ポリシー/トリガーは drop if exists → create、データ・テーブルに触れない）
+  ok   SQL: 既存の安全性（works の CHECK 制約・payload_path 検証・RLS 有効化・Storage UPDATE ポリシーなし・Storage バケット非公開）が 0001 に残っている
+  ok   SQL: RLSテストに search_path の監査と「空の search_path で実行」テストがある
+  ok   Remix: 許可ライセンスの一覧は SQL（works_before）の規則と一致する
+  ok   remixCheck: 許可ライセンスは誰でも可、all-rights-reserved は作者本人のみ、不明・欠落・非表示・非公開・サンプルは不可
+  ok   remixLicenses: ShareAlike の元作品（他人）は CC-BY-SA-4.0 のみ、本人・他ライセンスは全種
+  ok   app.js: Remix の入口は startRemix の1か所で、ライセンス検証→（Universeでは）最新の作品情報の再取得→SHA-256 検証済みデータのみ
+  ok   Universe: シェーダーの smoothstep はすべて edge0 < edge1。縁は 1.-smoothstep(.8,1.,d)（旧: smoothstep(1.,.8,d) は GLSL 仕様上未定義）
+  ok   Universe: window / document のリスナーは破棄時に必ず解除される（登録は on() 経由のみ。Observer は disconnect）
+  ok   Universe: 失敗時は2Dギャラリーへ（WebGL 非対応・シェーダー失敗・描画例外・コンテキスト復旧失敗）。コンテキスト喪失は preventDefault で復旧を許可
+  ok   app.js: ナビに Universe、未設定時はサンプルへ、画面離脱時は必ず破棄、読み込み中の離脱は描画しない
+  ok   Universe: サンプルは sample- 始まりで likes=0、親参照は集合内のみ。実作品変換は親を存在するものに限定し、thumb は data:image のみ通す
+  ok   Universe: サンプルと実作品を区別する表示（SAMPLE DATA / uv-is-sample / LIVE）と、Creator Space の作者選択UIがある
+  ok   整理: 空フォルダ・ブレース展開の残骸フォルダがない
+  ok   バージョン: README・CHANGES・コード・画面が V1.0.3 で一致し、古い3D説明（Three.js 未取得・Orbit のみ）が残っていない
+OK: 53 tests passed
+
+# cd zerostudio && node scripts/test-all.js --unit
+PASS  共通層（util / schema / store）  — 28 passed, 0 failed  (0.2s)
+PASS  サービス層・取り込み・移行  — 39 passed, 0 failed  (0.4s)
+PASS  元ソースとの照合  — 3 passed, 0 failed  (0.1s)
+PASS  Zero 連携（postMessage・URL設定）  — 15 passed, 0 failed  (0.5s)
+PASS  Zero 付属: logic  — 12 tests passed  (0.1s)
+PASS  Zero 付属: creation  — 24 tests passed  (1.0s)
+PASS  Zero 付属: remix  — 19 tests passed  (3.7s)
+PASS  Zero 付属: リンク検査  —   (1.8s)
+
+すべての工程が成功しました。
+
+# cd zerostudio && node scripts/test-all.js   (Playwright E2E 込み。実行結果の要約)
+PASS  共通層（util / schema / store）  — 28 passed, 0 failed  (0.1s)
+PASS  サービス層・取り込み・移行  — 39 passed, 0 failed  (0.4s)
+PASS  元ソースとの照合  — 3 passed, 0 failed  (0.1s)
+PASS  Zero 連携（postMessage・URL設定）  — 15 passed, 0 failed  (0.5s)
+PASS  Zero 付属: logic  — 12 tests passed  (0.1s)
+PASS  Zero 付属: creation  — 24 tests passed  (0.9s)
+PASS  Zero 付属: remix  — 19 tests passed  (3.6s)
+PASS  Zero 付属: リンク検査  —   (1.9s)
+PASS  ブリッジ（実ブラウザ）  — 7 passed, 0 failed  (12.0s)
+PASS  シェル（実ブラウザ）  — 13 passed, 0 failed  (62.0s)
+PASS  取り込み・書き出し・移行（実ブラウザ）  — 8 passed, 0 failed  (29.5s)
+PASS  既存機能・分離・共通ライブラリ（実ブラウザ）  — 12 passed, 0 failed  (74.8s)
+PASS  デザイン・UX（実ブラウザ）  — 8 passed, 0 failed  (39.6s)
+すべての工程が成功しました。
+
+# 未検証: PostgreSQL 上での 0001/0002/rls.test.sql の実行、実GPU・Safari・Firefox・実機スマホ、実Supabase。詳細は README の「未検証・未実装」
